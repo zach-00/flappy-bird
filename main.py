@@ -1,9 +1,12 @@
 import pygame
 import os
+import random
 pygame.init()
 clock = pygame.time.Clock()
 pygame.display.set_caption("Flappy Bird")
 game_font = pygame.font.Font(os.path.join("Assets", "PixelifySans.ttf"), 50)
+intro_font = pygame.font.Font(os.path.join("Assets", "PressStart2P.ttf"), 75)
+message_font = pygame.font.Font(os.path.join("Assets", "Orbitron.ttf"), 50)
 game_active = True
 
 score = 0
@@ -26,6 +29,16 @@ pipe_rect = pipe.get_rect(center=(900, 525)) # 480 pixel gap between pipes
 
 top_pipe = pygame.transform.rotozoom(pipe, 180, 1)
 top_pipe_rect = top_pipe.get_rect(center=(894, 45)) # 480 pixel gap between pipes
+
+# Intro Screen
+bird_3d = pygame.transform.rotozoom(pygame.image.load(os.path.join("Assets", "flappy-bird-3d.png")), 0, 1.2)
+bird_3d_rect = bird_3d.get_rect(center=(500, 375))
+
+game_name = intro_font.render("Flappy Bird!", False, "Black")
+game_name_rect = game_name.get_rect(center=(500, 100))
+
+game_message = message_font.render("Press space to play!", False, "Black")
+game_message_rect = game_message.get_rect(center=(500, 650))
 
 bird_gravity = 0
 
@@ -68,15 +81,20 @@ while running:
         top_pipe_rect.x -= 6
 
 
-        # Pipe and ground reset
+        # Ground reset
         if ground_rect.right == 1080:
             ground_rect.right = 1500
+
+        # Dynamic Pipe reset placement
+        random_num = random.randint(450, 600)
         if pipe_rect.right <= 0:
-            pipe_rect.left = 1000
+            pipe_rect.center = (1000, random_num)
 
         if top_pipe_rect.right <= 0:
-            top_pipe_rect.left = 1000
+            top_pipe_rect.center = (1000, (random_num - 480))
 
+
+        # Score
         if pipe_rect.right < 135 and pipe_rect.right > 128:
             score += 1
 
@@ -91,8 +109,11 @@ while running:
         if bird_rect.colliderect(ground_rect):
             game_active = False
 
-    else:
-        screen.fill("Yellow")
+    else: # Game Over / Intro Screen
+        screen.fill("#1ecbe1")
+        screen.blit(bird_3d, bird_3d_rect)
+        screen.blit(game_name, game_name_rect)
+        screen.blit(game_message, game_message_rect)
 
     pygame.display.update()
     clock.tick(60)
