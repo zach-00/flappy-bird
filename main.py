@@ -2,6 +2,7 @@ import pygame
 import os
 import random
 pygame.init()
+pygame.mixer.init()
 clock = pygame.time.Clock()
 pygame.display.set_caption("Flappy Bird")
 game_font = pygame.font.Font(os.path.join("Assets", "PixelifySans.ttf"), 50)
@@ -40,12 +41,15 @@ game_name_rect = game_name.get_rect(center=(500, 100))
 game_message = message_font.render("Press space to play!", False, "Black")
 game_message_rect = game_message.get_rect(center=(500, 650))
 
+# score_message = message_font.render(f"Your score: {score}", False, "Green")
+# score_message_rect = score_message.get_rect(center=(500, 650))
+
 bird_gravity = 0
 
 
+game_active = False
 running = True
 while running:
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -55,6 +59,7 @@ while running:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     bird_gravity = -15
+
         else:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 game_active = True
@@ -102,6 +107,8 @@ while running:
         # Bird
         bird_gravity += 1
         bird_rect.y += bird_gravity
+        if bird_rect.top <= 0:
+            bird_rect.top = 0
 
         # collisions
         if bird_rect.colliderect(pipe_rect) or bird_rect.colliderect(top_pipe_rect):
@@ -113,7 +120,12 @@ while running:
         screen.fill("#1ecbe1")
         screen.blit(bird_3d, bird_3d_rect)
         screen.blit(game_name, game_name_rect)
-        screen.blit(game_message, game_message_rect)
+        if score == 0:
+            screen.blit(game_message, game_message_rect)
+        else:
+            score_message = message_font.render(f"Your score: {score}", False, "Green")
+            score_message_rect = score_message.get_rect(center=(500, 650))
+            screen.blit(score_message, score_message_rect)
 
     pygame.display.update()
     clock.tick(60)
