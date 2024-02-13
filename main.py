@@ -19,7 +19,7 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 background = pygame.transform.scale(pygame.image.load(os.path.join("Assets", "background.png")), (WIDTH, HEIGHT))
 
 bird = pygame.transform.scale(pygame.image.load(os.path.join("Assets", "flappy-bird.png")), (70, 35))
-# bird_rect2 = pygame.Rect(100, 300, 80, 40)
+
 bird_rect = bird.get_rect(center=(100,300))
 
 ground = pygame.transform.scale(pygame.image.load(os.path.join("Assets", "ground.png")), (1500, 100))
@@ -40,9 +40,6 @@ game_name_rect = game_name.get_rect(center=(500, 100))
 
 game_message = message_font.render("Press space to play!", False, "Black")
 game_message_rect = game_message.get_rect(center=(500, 650))
-
-# score_message = message_font.render(f"Your score: {score}", False, "Green")
-# score_message_rect = score_message.get_rect(center=(500, 650))
 
 bird_gravity = 0
 
